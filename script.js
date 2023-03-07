@@ -7,7 +7,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiYW5hbm1heSIsImEiOiJjbDk0azNmY3oxa203M3huMzhyZ
 
 // max bounds
 const maxBounds = [
-    [-79.6772, 43.4400], // SW coords
+    [-79.6772, 43.4000], // SW coords
     [-79.04763, 44.03074] // NE coords
 ];
 
@@ -16,7 +16,7 @@ const map = new mapboxgl.Map({
     container: "map", // container ID
     style: "mapbox://styles/ananmay/clb46qysm000l14kyvn8q1gjh", // custom Mapbox Studio style URL
     center: [-79.3832, 43.3432], // starting center in [lng, lat]
-    zoom: 8,
+    zoom: 7,
     maxBounds:maxBounds,
     //bearing: -17.1,
 });
