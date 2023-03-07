@@ -171,7 +171,7 @@ map.on('click', 'neighbourhood-fill', (e) => {
 
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML("<h5>" + name + "</h5>" + "Air Pollution Find Particulate Matter (PM 2.5) 2016 Level: " + level)
+        .setHTML("<h5>" + name + "</h5>" + "Air Pollution Fine Particulate Matter (PM 2.5) 2016 Level: " + level)
         .addTo(map);
 });
 
