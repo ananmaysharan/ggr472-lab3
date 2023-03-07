@@ -2,15 +2,23 @@
 GGR472 Lab 3 - Ananmay Sharan
 --------------------------------------------------------------------*/
 
-// access token
+//access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiYW5hbm1heSIsImEiOiJjbDk0azNmY3oxa203M3huMzhyZndlZDRoIn0.1L-fBYplQMuwz0LGctNeiA'; //ADD YOUR ACCESS TOKEN HERE
 
-//Initialize map
+// max bounds
+const maxBounds = [
+    [-79.6772, 43.4400], // SW coords
+    [-79.04763, 44.03074] // NE coords
+];
+
+//initialize map
 const map = new mapboxgl.Map({
     container: "map", // container ID
     style: "mapbox://styles/ananmay/clb46qysm000l14kyvn8q1gjh", // custom Mapbox Studio style URL
-    center: [-79.3832, 43.6932], // starting center in [lng, lat]
-    zoom: 10,
+    center: [-79.3832, 43.3432], // starting center in [lng, lat]
+    zoom: 8,
+    maxBounds:maxBounds,
+    //bearing: -17.1,
 });
 
 
@@ -23,7 +31,7 @@ map.addControl(new mapboxgl.NavigationControl());
 //add fullscreen option to the map
 map.addControl(new mapboxgl.FullscreenControl());
 
-//create geocoder variable, only show Toronto results
+//create geocoder variable, only show Toronto area results
 const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
@@ -119,10 +127,10 @@ legendlabels.forEach((label, i) => {
 
 
 /*--------------------------------------------------------------------
-ADD INTERACTIVITY BASED ON HTML EVENT
+adding interactivity
 --------------------------------------------------------------------*/
 
-//Add event listeneer which returns map view to full screen on button click
+//add event listener for full screen on button click
 document.getElementById('returnbutton').addEventListener('click', () => {
     map.flyTo({
         center: [-79.3832, 43.6932],
@@ -131,7 +139,7 @@ document.getElementById('returnbutton').addEventListener('click', () => {
     });
 });
 
-//Change display of legend based on check box
+//change display of layers based on check box
 let legendcheck = document.getElementById('legendcheck');
 
 legendcheck.addEventListener('click', () => {
@@ -145,14 +153,36 @@ legendcheck.addEventListener('click', () => {
     }
 });
 
-
-//Change map layer display based on check box using setlayoutproperty
 document.getElementById('layercheck').addEventListener('change', (e) => {
     map.setLayoutProperty(
-        'provterr-fill',
+        'neighbourhood-fill',
         'visibility',
         e.target.checked ? 'visible' : 'none'
     );
+});
+
+//  adding popup
+
+// When a click event occurs on a feature in the neighbourhood layer, open a popup at the
+// location of the feature, with description HTML from its properties.
+map.on('click', 'neighbourhood-fill', (e) => {
+    const name = e.features[0].properties.AREA_NAME;
+    const level = e.features[0].properties.pm25_2016;
+
+    new mapboxgl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML("<h5>" + name + "</h5>" + "Air Pollution PM 2.5 (μm) 2016 Level: " + level)
+        .addTo(map);
+});
+
+// Change the cursor to a pointer when hovering over the fill layer
+map.on('mouseenter', 'fill-layer', function () {
+    map.getCanvas().style.cursor = 'pointer';
+});
+
+// Change the cursor back to the default when no longer hovering over the fill layer
+map.on('mouseleave', 'fill-layer', function () {
+    map.getCanvas().style.cursor = '';
 });
 
 
